@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mr. Space Picks</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --purple: #7c5cbf;
+    --purple-light: #9d80d8;
+    --white: #f5f5f5;
+    --bg: #08080d;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+  }
+
+  /* Stars */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.1; }
+    to { opacity: 0.6; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 24px;
+  }
+
+  /* Logo SVG inline */
+  .logo-wrap {
+    animation: fadeUp 0.8s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo-svg { display: block; width: 1140px; max-width: 95vw; }
+
+  /* Bio */
+  .bio {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    color: rgba(245,245,245,0.85);
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.8;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  /* Buttons */
+  .buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    justify-content: center;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border: 1px solid rgba(124, 92, 191, 0.35);
+    border-radius: 3px;
+    background: rgba(124, 92, 191, 0.06);
+    color: var(--white);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 2.5px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .btn:hover {
+    border-color: var(--purple);
+    background: rgba(124, 92, 191, 0.18);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  .btn svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+  }
+
+  /* Divider line */
+  .divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(124,92,191,0.3);
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+
+  <!-- LOGO -->
+  <div class="logo-wrap">
+    <svg class="logo-svg" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="ring-clip"><rect x="182" y="138" width="176" height="22"/></clipPath>
+      </defs>
+      <!-- stars bg -->
+      <circle cx="60" cy="40" r="1.5" fill="#aaa" opacity="0.5"/>
+      <circle cx="620" cy="55" r="1.5" fill="#aaa" opacity="0.5"/>
+      <circle cx="640" cy="30" r="1" fill="#aaa" opacity="0.4"/>
+      <circle cx="90" cy="90" r="1" fill="#aaa" opacity="0.3"/>
+      <!-- orbit back -->
+      <ellipse cx="270" cy="148" rx="88" ry="22" fill="none" stroke="#7c5cbf" stroke-width="3" stroke-dasharray="5 3" opacity="0.4"/>
+      <!-- planet -->
+      <circle cx="270" cy="148" r="46" fill="#2a2a2a" stroke="#ffffff" stroke-width="2"/>
+      <circle cx="258" cy="136" r="10" fill="#7c5cbf" opacity="0.35"/>
+      <circle cx="278" cy="156" r="6" fill="#9d80d8" opacity="0.3"/>
+      <circle cx="255" cy="160" r="4" fill="#7c5cbf" opacity="0.2"/>
+      <!-- orbit front -->
+      <ellipse cx="270" cy="148" rx="88" ry="22" fill="none" stroke="#7c5cbf" stroke-width="4" opacity="0.9" clip-path="url(#ring-clip)"/>
+      <circle cx="358" cy="148" r="6" fill="#7c5cbf"/>
+      <circle cx="182" cy="148" r="4.5" fill="#9d80d8" opacity="0.7"/>
+      <!-- text -->
+      <text x="370" y="118" font-size="26" font-family="'Bebas Neue', 'Arial Black', sans-serif" fill="#7c5cbf" letter-spacing="6">MR.</text>
+      <text x="368" y="168" font-size="50" font-family="'Bebas Neue', 'Arial Black', sans-serif" fill="#ffffff" letter-spacing="3">SPACE</text>
+      <line x1="368" y1="175" x2="618" y2="175" stroke="#7c5cbf" stroke-width="0.5" opacity="0.35"/>
+      <text x="370" y="204" font-size="22" font-family="'Bebas Neue', 'Arial Black', sans-serif" fill="#7c5cbf" letter-spacing="13">PICKS</text>
+    </svg>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- BIO -->
+  <p class="bio">SF-based reseller hunting the best secondhand &amp; NWT gems.<br>Every pick is worth it. Fast shipping. 🪐</p>
+
+  <!-- BUTTONS -->
+  <div class="buttons">
+    <a class="btn" href="https://www.ebay.com/usr/mrspacepicksca" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6.5C3 4.57 4.57 3 6.5 3H11v18H6.5C4.57 21 3 19.43 3 17.5v-11z"/><path d="M13 3h4.5C19.43 3 21 4.57 21 6.5v11c0 1.93-1.57 3.5-3.5 3.5H13V3z" opacity=".5"/></svg>
+      eBay
+    </a>
+    <a class="btn" href="https://poshmark.com/closet/mrspacepicks1" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+      Poshmark
+    </a>
+    <a class="btn" href="https://www.depop.com/mrspaceca" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 2a8 8 0 110 16A8 8 0 0112 4zm0 3a5 5 0 100 10A5 5 0 0012 7z"/></svg>
+      Depop
+    </a>
+    <a class="btn" href="https://www.mercari.com/u/mrspacepicks" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v2H4zm0 7h16v2H4zm0 7h16v2H4z"/></svg>
+      Mercari
+    </a>
+    <a class="btn" href="https://www.etsy.com/shop/mrspacepicks" target="_blank">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2zm7 4v10m-5-5h10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      Etsy
+    </a>
+  </div>
+
+</div>
+
+<script>
+  const s = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'star';
+    const size = Math.random() * 1.8 + 0.5;
+    el.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      --d:${(Math.random()*3+2).toFixed(1)}s;
+      animation-delay:${(Math.random()*4).toFixed(1)}s;
+    `;
+    s.appendChild(el);
+  }
+</script>
+</body>
+</html>
