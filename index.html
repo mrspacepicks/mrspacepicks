@@ -67,10 +67,25 @@
   .logo-svg { display: block; width: 1140px; max-width: 95vw; }
 
   @media (max-width: 768px) {
-    .logo-svg { width: 95vw; }
-    .container { gap: 24px; }
-    .buttons { flex-wrap: wrap; }
-    .btn { font-size: 13px; padding: 10px 16px; }
+    .logo-svg { width: 100vw; max-width: 100vw; }
+    .container { gap: 20px; padding: 16px; justify-content: center; }
+    .buttons {
+      flex-wrap: wrap;
+      gap: 10px;
+      width: 100%;
+      padding: 0 16px;
+    }
+    .btn {
+      font-size: 12px;
+      padding: 10px 14px;
+      flex: 1 1 calc(33% - 10px);
+      justify-content: center;
+      min-width: 90px;
+    }
+    .bio {
+      font-size: 14px;
+      padding: 0 16px;
+    }
   }
 
   /* Bio */
