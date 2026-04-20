@@ -1,226 +1,533 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mr. Space Picks</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet"/>
-<style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mr. Space Picks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --purple: #9b5de5;
+      --purple-light: #c77dff;
+      --purple-dark: #5a189a;
+      --white: #f8f4ff;
+      --dim: #b8a9d0;
+      --bg: #0a0612;
+      --card-bg: rgba(155, 93, 229, 0.08);
+      --card-border: rgba(155, 93, 229, 0.25);
+    }
 
-  :root {
-    --purple: #7c5cbf;
-    --purple-light: #9d80d8;
-    --white: #f5f5f5;
-    --bg: #08080d;
-  }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html, body {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    background: var(--bg);
-    color: var(--white);
-    font-family: 'Rajdhani', sans-serif;
-  }
+    html { scroll-behavior: smooth; }
 
-  /* Stars */
-  .stars {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .star {
-    position: absolute;
-    border-radius: 50%;
-    background: #fff;
-    animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
-    opacity: 0;
-  }
-  @keyframes twinkle {
-    from { opacity: 0.1; }
-    to { opacity: 0.6; }
-  }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-  .container {
-    position: relative;
-    z-index: 1;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    padding: 24px;
-  }
+    /* ─── STARFIELD ─── */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-  /* Logo SVG inline */
-  .logo-wrap {
-    animation: fadeUp 0.8s ease both;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 1;
+    }
 
-  .logo-svg { display: block; width: 1140px; max-width: 95vw; }
+    /* ─── AMBIENT GLOW ─── */
+    .glow-top {
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 700px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(155, 93, 229, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-  @media (max-width: 768px) {
-    .logo-svg { width: 100vw; max-width: 100vw; }
-    .container { gap: 20px; padding: 16px; justify-content: center; }
-    .buttons {
-      flex-wrap: wrap;
-      gap: 10px;
+    /* ─── WRAPPER ─── */
+    .page {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* ─── HEADER ─── */
+    header {
       width: 100%;
-      padding: 0 16px;
+      max-width: 900px;
+      padding: 36px 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.1s forwards;
     }
-    .btn {
-      font-size: 12px;
-      padding: 10px 14px;
-      flex: 1 1 calc(33% - 10px);
+
+    .logo-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.25em;
+      color: var(--purple-light);
+    }
+
+    .badge {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--dim);
+      border: 1px solid var(--card-border);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      min-width: 90px;
+      text-align: center;
+      padding: 60px 24px 20px;
+      gap: 0;
     }
-    .bio {
-      font-size: 14px;
-      padding: 0 16px;
+
+    /* ORBIT LOGO */
+    .orbit-container {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.3s forwards;
     }
-  }
 
-  /* Bio */
-  .bio {
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    letter-spacing: 1.5px;
-    color: rgba(245,245,245,0.85);
-    text-align: center;
-    max-width: 600px;
-    line-height: 1.8;
-    animation: fadeUp 0.8s 0.2s ease both;
-  }
+    .planet {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 56px;
+      height: 56px;
+      background: radial-gradient(circle at 35% 35%, var(--purple-light), var(--purple-dark));
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(155, 93, 229, 0.6), 0 0 60px rgba(155, 93, 229, 0.2);
+    }
 
-  /* Buttons */
-  .buttons {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 12px;
-    justify-content: center;
-    animation: fadeUp 0.8s 0.4s ease both;
-  }
+    .planet::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotateX(72deg);
+      width: 90px;
+      height: 90px;
+      border: 2px solid rgba(199, 125, 255, 0.45);
+      border-radius: 50%;
+    }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 22px;
-    border: 1px solid rgba(124, 92, 191, 0.35);
-    border-radius: 3px;
-    background: rgba(124, 92, 191, 0.06);
-    color: var(--white);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 15px;
-    letter-spacing: 2.5px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
-  .btn:hover {
-    border-color: var(--purple);
-    background: rgba(124, 92, 191, 0.18);
-    color: #fff;
-    transform: translateY(-2px);
-  }
-  .btn svg {
-    width: 14px;
-    height: 14px;
-    opacity: 0.7;
-  }
+    .orbit-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      border: 1px solid rgba(155, 93, 229, 0.2);
+      border-radius: 50%;
+      transform-origin: center center;
+    }
 
-  /* Divider line */
-  .divider {
-    width: 1px;
-    height: 32px;
-    background: rgba(124,92,191,0.3);
-    animation: fadeUp 0.8s 0.3s ease both;
-  }
-</style>
+    .orbit-ring-1 {
+      width: 120px;
+      height: 120px;
+      margin: -60px 0 0 -60px;
+      animation: orbit1 8s linear infinite;
+    }
+
+    .orbit-ring-2 {
+      width: 155px;
+      height: 155px;
+      margin: -77.5px 0 0 -77.5px;
+      animation: orbit2 14s linear infinite reverse;
+      border-color: rgba(155, 93, 229, 0.1);
+    }
+
+    .dot {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--purple-light);
+      box-shadow: 0 0 8px var(--purple-light);
+    }
+
+    .dot-1 {
+      width: 7px;
+      height: 7px;
+      top: -3.5px;
+      left: calc(50% - 3.5px);
+    }
+
+    .dot-2 {
+      width: 5px;
+      height: 5px;
+      top: -2.5px;
+      left: calc(50% - 2.5px);
+      background: #e0bbff;
+    }
+
+    @keyframes orbit1 {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    @keyframes orbit2 {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    /* HEADLINE */
+    .headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 10.5vw, 7.8rem);
+      line-height: 1;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      white-space: nowrap;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+
+    .headline span {
+      color: var(--purple-light);
+      text-shadow: 0 0 40px rgba(199, 125, 255, 0.4);
+    }
+
+    .tagline {
+      margin-top: 20px;
+      font-size: 0.92rem;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+      max-width: 360px;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.7s forwards;
+    }
+
+    /* ─── PLATFORM CARDS ─── */
+    .platforms {
+      display: flex;
+      gap: 14px;
+      margin-top: 52px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.9s forwards;
+    }
+
+    .platform-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--white);
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: background 0.25s, border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .platform-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155, 93, 229, 0.12) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .platform-card:hover::before { opacity: 1; }
+
+    .platform-card:hover {
+      border-color: rgba(199, 125, 255, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(155, 93, 229, 0.2);
+    }
+
+    .platform-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .icon-ebay   { background: #E53238; }
+    .icon-posh   { background: #7B2D8B; }
+    .icon-merc   { background: #ff4500; }
+    .icon-depop  { background: #ff2300; }
+
+    .platform-label {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .platform-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      line-height: 1;
+    }
+
+    .platform-sub {
+      font-size: 0.68rem;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+    }
+
+    .arrow {
+      margin-left: 6px;
+      color: var(--purple-light);
+      font-size: 0.85rem;
+      transition: transform 0.2s;
+    }
+
+    .platform-card:hover .arrow { transform: translateX(4px); }
+
+    /* ─── STATS STRIP ─── */
+    .stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 64px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.1s forwards;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: var(--purple-light);
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      color: var(--dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 40px;
+      background: var(--card-border);
+      align-self: center;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 0.7rem;
+      color: rgba(184, 169, 208, 0.4);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.3s forwards;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 480px) {
+      .platforms { flex-direction: column; align-items: stretch; }
+      .platform-card { justify-content: space-between; }
+      .stats { gap: 28px; }
+      .stat-divider { display: none; }
+    }
+  </style>
 </head>
 <body>
 
-<div class="stars" id="stars"></div>
+<canvas id="stars"></canvas>
+<div class="glow-top"></div>
 
-<div class="container">
+<div class="page">
 
-  <!-- LOGO -->
-  <div class="logo-wrap">
-    <svg class="logo-svg" viewBox="0 0 680 280" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <clipPath id="ring-clip"><rect x="182" y="138" width="176" height="22"/></clipPath>
-      </defs>
-      <!-- stars bg -->
-      <circle cx="60" cy="40" r="1.5" fill="#aaa" opacity="0.5"/>
-      <circle cx="620" cy="55" r="1.5" fill="#aaa" opacity="0.5"/>
-      <circle cx="640" cy="30" r="1" fill="#aaa" opacity="0.4"/>
-      <circle cx="90" cy="90" r="1" fill="#aaa" opacity="0.3"/>
-      <!-- orbit back -->
-      <ellipse cx="270" cy="148" rx="88" ry="22" fill="none" stroke="#7c5cbf" stroke-width="3" stroke-dasharray="5 3" opacity="0.4"/>
-      <!-- planet -->
-      <circle cx="270" cy="148" r="46" fill="#2a2a2a" stroke="#ffffff" stroke-width="2"/>
-      <circle cx="258" cy="136" r="10" fill="#7c5cbf" opacity="0.35"/>
-      <circle cx="278" cy="156" r="6" fill="#9d80d8" opacity="0.3"/>
-      <circle cx="255" cy="160" r="4" fill="#7c5cbf" opacity="0.2"/>
-      <!-- orbit front -->
-      <ellipse cx="270" cy="148" rx="88" ry="22" fill="none" stroke="#7c5cbf" stroke-width="4" opacity="0.9" clip-path="url(#ring-clip)"/>
-      <circle cx="358" cy="148" r="6" fill="#7c5cbf"/>
-      <circle cx="182" cy="148" r="4.5" fill="#9d80d8" opacity="0.7"/>
-      <!-- text -->
-      <text x="370" y="118" font-size="26" font-family="'Bebas Neue', 'Arial Black', sans-serif" fill="#7c5cbf" letter-spacing="6">MR.</text>
-      <text x="368" y="168" font-size="50" font-family="'Bebas Neue', 'Arial Black', sans-serif" fill="#ffffff" letter-spacing="3">SPACE</text>
-      <line x1="368" y1="175" x2="618" y2="175" stroke="#7c5cbf" stroke-width="0.5" opacity="0.35"/>
-      <text x="370" y="204" font-size="22" font-family="'Bebas Neue', 'Arial Black', sans-serif" fill="#7c5cbf" letter-spacing="13">PICKS</text>
-    </svg>
-  </div>
+  <header>
+    <span class="logo-text">MR.SPACE.PICKS</span>
+    <span class="badge">SF Bay Area 🪐</span>
+  </header>
 
-  <div class="divider"></div>
+  <main class="hero">
 
-  <!-- BIO -->
-  <p class="bio">SF-based reseller hunting the best secondhand &amp; NWT gems.<br>Every pick is worth it. Fast shipping. 🪐</p>
+    <div class="orbit-container">
+      <div class="planet"></div>
+      <div class="orbit-ring orbit-ring-1">
+        <div class="dot dot-1"></div>
+      </div>
+      <div class="orbit-ring orbit-ring-2">
+        <div class="dot dot-2"></div>
+      </div>
+    </div>
 
-  <!-- BUTTONS -->
-  <div class="buttons">
-    <a class="btn" href="https://www.ebay.com/usr/mrspacepicksca" target="_blank">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6.5C3 4.57 4.57 3 6.5 3H11v18H6.5C4.57 21 3 19.43 3 17.5v-11z"/><path d="M13 3h4.5C19.43 3 21 4.57 21 6.5v11c0 1.93-1.57 3.5-3.5 3.5H13V3z" opacity=".5"/></svg>
-      eBay
-    </a>
-    <a class="btn" href="https://poshmark.com/closet/mrspacepicks1" target="_blank">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
-      Poshmark
-    </a>
-    <a class="btn" href="https://www.mercari.com/u/mrspacepicks" target="_blank">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v2H4zm0 7h16v2H4zm0 7h16v2H4z"/></svg>
-      Mercari
-    </a>
-  </div>
+    <h1 class="headline">MR. <span>SPACE</span> PICKS</h1>
+
+    <p class="tagline">
+      SF-based reseller hunting the best secondhand &amp; NWT gems.<br>
+      Every pick is worth it. Fast shipping.
+    </p>
+
+    <div class="platforms">
+
+      <a href="https://www.ebay.com/usr/mrspacepicksca" target="_blank" rel="noopener" class="platform-card">
+        <div class="platform-icon icon-ebay">🛒</div>
+        <div class="platform-label">
+          <span class="platform-name">eBay</span>
+          <span class="platform-sub">Shop the listings</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="https://poshmark.com/closet/mrspacepicks1" target="_blank" rel="noopener" class="platform-card">
+        <div class="platform-icon icon-posh">👗</div>
+        <div class="platform-label">
+          <span class="platform-name">Poshmark</span>
+          <span class="platform-sub">Browse the closet</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="https://www.mercari.com/u/mrspacepicks" target="_blank" rel="noopener" class="platform-card">
+        <div class="platform-icon icon-merc">📦</div>
+        <div class="platform-label">
+          <span class="platform-name">Mercari</span>
+          <span class="platform-sub">See all items</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="https://www.depop.com/mrspacepicks/" target="_blank" rel="noopener" class="platform-card">
+        <div class="platform-icon icon-depop">🌀</div>
+        <div class="platform-label">
+          <span class="platform-name">Depop</span>
+          <span class="platform-sub">Vintage & streetwear</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Platforms</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">⚡</span>
+        <span class="stat-label">Fast Ship</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Authentic</span>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; 2025 Mr. Space Picks &nbsp;·&nbsp; San Francisco Bay Area
+  </footer>
 
 </div>
 
 <script>
-  const s = document.getElementById('stars');
-  for (let i = 0; i < 80; i++) {
-    const el = document.createElement('div');
-    el.className = 'star';
-    const size = Math.random() * 1.8 + 0.5;
-    el.style.cssText = `
-      width:${size}px; height:${size}px;
-      top:${Math.random()*100}%;
-      left:${Math.random()*100}%;
-      --d:${(Math.random()*3+2).toFixed(1)}s;
-      animation-delay:${(Math.random()*4).toFixed(1)}s;
-    `;
-    s.appendChild(el);
+  /* ── STARFIELD ── */
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
   }
+
+  function initStars(n = 160) {
+    stars = [];
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x:       Math.random() * canvas.width,
+        y:       Math.random() * canvas.height,
+        r:       Math.random() * 1.4 + 0.2,
+        alpha:   Math.random(),
+        speed:   Math.random() * 0.004 + 0.001,
+        phase:   Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  function drawStars(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      const a = 0.3 + 0.5 * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(220,200,255,${a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+
+  resize();
+  initStars();
+  requestAnimationFrame(drawStars);
+  window.addEventListener('resize', () => { resize(); initStars(); });
 </script>
+
 </body>
 </html>
