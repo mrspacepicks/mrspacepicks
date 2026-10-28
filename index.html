@@ -11,7 +11,7 @@
     :root {
       --purple: #9b5de5;
       --purple-light: #c77dff;
-      --purple-dark: #5a189a;
+     --purple-dark: #5a189a;
       --white: #f8f4ff;
       --dim: #b8a9d0;
       --bg: #0a0612;
@@ -404,7 +404,7 @@
 
   <header>
     <span class="logo-text">MR.SPACE.PICKS</span>
-    <span class="badge">SF Bay Area 🪐</span>
+    <span class="badge" id="city-badge">LA 🪐</span>
   </header>
 
   <main class="hero">
@@ -422,7 +422,7 @@
     <h1 class="headline">MR. <span>SPACE</span> PICKS</h1>
 
     <p class="tagline">
-      SF-based reseller hunting the best secondhand &amp; NWT gems.<br>
+      LA-based reseller hunting the best secondhand &amp; NWT gems.<br>
       Every pick is worth it. Fast shipping.
     </p>
 
@@ -520,24 +520,34 @@
     canvas.height = window.innerHeight;
   }
 
-  function initStars(n = 160) {
+  function initStars(n = 200) {
     stars = [];
     for (let i = 0; i < n; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const spd   = Math.random() * 0.18 + 0.04;
       stars.push({
-        x:       Math.random() * canvas.width,
-        y:       Math.random() * canvas.height,
-        r:       Math.random() * 1.4 + 0.2,
-        alpha:   Math.random(),
-        speed:   Math.random() * 0.004 + 0.001,
-        phase:   Math.random() * Math.PI * 2,
+        x:    Math.random() * canvas.width,
+        y:    Math.random() * canvas.height,
+        r:    Math.random() * 1.5 + 0.2,
+        vx:   Math.cos(angle) * spd,
+        vy:   Math.sin(angle) * spd,
+        phase: Math.random() * Math.PI * 2,
+        twinkle: Math.random() * 0.015 + 0.005,
       });
     }
   }
 
   function drawStars(t) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const ts = t * 0.001;
     stars.forEach(s => {
-      const a = 0.3 + 0.5 * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
+      s.x += s.vx;
+      s.y += s.vy;
+      if (s.x < -2)  s.x = canvas.width  + 2;
+      if (s.x > canvas.width  + 2) s.x = -2;
+      if (s.y < -2)  s.y = canvas.height + 2;
+      if (s.y > canvas.height + 2) s.y = -2;
+      const a = 0.25 + 0.55 * (0.5 + 0.5 * Math.sin(ts * s.twinkle * 1000 + s.phase));
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(220,200,255,${a})`;
@@ -550,6 +560,20 @@
   initStars();
   requestAnimationFrame(drawStars);
   window.addEventListener('resize', () => { resize(); initStars(); });
+
+  /* ── CITY BADGE ROTATION ── */
+  const cities = ['LA 🪐','Venice 🪐','Hollywood 🪐','Santa Monica 🪐','Malibu 🪐','Pasadena 🪐','Long Beach 🪐','Compton 🪐','Inglewood 🪐','Culver City 🪐'];
+  const badge = document.getElementById('city-badge');
+  let ci = 0;
+  setInterval(() => {
+    ci = (ci + 1) % cities.length;
+    badge.style.opacity = '0';
+    badge.style.transition = 'opacity 0.3s';
+    setTimeout(() => {
+      badge.textContent = cities[ci];
+      badge.style.opacity = '1';
+    }, 300);
+  }, 1800);
 </script>
 
 </body>
